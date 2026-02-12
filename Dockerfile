@@ -8,8 +8,6 @@
 	# Copy Python file
 	COPY app.py .
 
-	RUN pip install flask
-
 	EXPOSE 8080
 
 	# Run the app
