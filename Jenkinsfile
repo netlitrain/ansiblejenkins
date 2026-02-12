@@ -1,5 +1,5 @@
 pipeline {
-    agent { label '${LABEL_NAME}' }
+    agent { label "${LABEL_NAME}" }
 
     environment {
         IMAGE_NAME = "myapp"
@@ -19,7 +19,7 @@ pipeline {
                 ansiblePlaybook(
                     playbook: 'ansible/deploy.yml',
                     inventory: 'ansible/hosts.ini',
-                    credentialsId: '${SSH_KEY}',
+                    credentialsId: "${SSH_KEY}",
                     extras: """
                       --extra-vars '{"image_name":"${IMAGE_NAME}","image_tag":"${IMAGE_TAG}","container_name":"${CONTAINER_NAME}"}'
                     """,
