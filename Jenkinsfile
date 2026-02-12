@@ -1,21 +1,32 @@
 pipeline {
-  agent { label "${LABEL_NAME}" }
+    agent { label '${LABEL_NAME}' }
 
-  stages {
-    stage('CODE') {
-      steps {
-                git url:"https://github.com/netlitrain/ansiblejenkins.git", branch: "main"
-      }
+    environment {
+        IMAGE_NAME = "myapp"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        CONTAINER_NAME = "myapp-container"
     }
-    
-    stage('ANSIBLE PLAYBOOK') {
-      steps {
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Deploy via Ansible Plugin') {
+            steps {
                 ansiblePlaybook(
-                  playbook: 'ansible/deploy.yml',
-                  inventory: 'ansible/hosts.ini',
-                  credentialsId: '${SSH_KEY}'
+                    playbook: 'ansible/deploy.yml',
+                    inventory: 'ansible/hosts.ini',
+                    credentialsId: '${SSH_KEY}',
+                    extras: """
+                      --extra-vars '{"image_name":"${IMAGE_NAME}","image_tag":"${IMAGE_TAG}","container_name":"${CONTAINER_NAME}"}'
+                    """,
+                    colorized: true,
+                    disableHostKeyChecking: true
                 )
-      }
+            }
+        }
     }
-  }
 }
