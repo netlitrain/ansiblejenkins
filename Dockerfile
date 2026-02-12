@@ -8,7 +8,7 @@
 	# Copy Python file
 	COPY app.py .
 
-	EXPOSE 8080
+	EXPOSE 8090
 
 	# Run the app
 	CMD ["python", "app.py"]
